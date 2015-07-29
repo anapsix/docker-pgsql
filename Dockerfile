@@ -1,6 +1,7 @@
 FROM alpine:3.2
 RUN apk upgrade --update && \
     apk add postgresql && \
+    sed -i "s/#listen_addresses.*/listen_addresses = '*'/g" /usr/share/postgresql/postgresql.conf.sample && \
     touch /run/openrc/softlevel && \
     /etc/init.d/postgresql setup && \
     rm /run/openrc/softlevel && \
