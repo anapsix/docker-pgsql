@@ -1,15 +1,14 @@
 FROM alpine:3.2
 RUN apk upgrade --update && \
     apk add postgresql && \
-    sed -i "s/#listen_addresses.*/listen_addresses = '*'/g" /usr/share/postgresql/postgresql.conf.sample && \
-    touch /run/openrc/softlevel && \
-    /etc/init.d/postgresql setup && \
-    rm /run/openrc/softlevel && \
-    cp /var/lib/postgresql/9.4/data/postgresql.conf /etc/postgresql.conf && \
-    chmod 644 /etc/postgresql.conf
+    mkdir /docker-entrypoint-initdb.d && \
+    mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
 COPY ./gosu-amd64 /usr/local/bin/gosu
 COPY docker-entrypoint.sh /entrypoint.sh
-VOLUME /var/lib/postgresql
+ENV LANG en_US.utf8
+ENV PATH /usr/lib/postgresql/$PG_MAJOR/bin:$PATH
+ENV PGDATA /var/lib/postgresql/data
+VOLUME /var/lib/postgresql/data
 EXPOSE 5432
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["postgres"]
