@@ -1,4 +1,5 @@
-FROM alpine:3.2
+FROM alpine:latest
+MAINTAINER Anastas Dancha <anapsix@random.io>
 RUN apk upgrade --update && \
     apk add postgresql && \
     mkdir /docker-entrypoint-initdb.d && \
